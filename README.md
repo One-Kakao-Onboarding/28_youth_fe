@@ -13,6 +13,9 @@ K-Talk 스타일 채팅으로 맛집 추천받는 AI 채팅 앱
 
 ---
 
+## BE Github-Link
+https://github.com/One-Kakao-Onboarding/28_youth_be
+
 ## 📱 주요 기능
 
 ### Step 1. 대화방 (Chat Room)
