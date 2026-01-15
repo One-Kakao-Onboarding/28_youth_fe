@@ -99,7 +99,12 @@ export function ChatRoomView({
         <Input
           value={inputValue}
           onChange={e => setInputValue(e.target.value)}
-          onKeyDown={e => e.key === "Enter" && handleSendMessage()}
+          onKeyDown={e => {
+            if (e.key === "Enter" && !e.nativeEvent.isComposing) {
+              e.preventDefault()
+              handleSendMessage()
+            }
+          }}
           placeholder="메시지를 입력하세요"
           className="flex-1 border-0 bg-gray-100 rounded-full focus-visible:ring-0"
         />
@@ -115,7 +120,7 @@ export function ChatRoomView({
         </Button>
       </div>
 
-      {/* Bottom Sheet */}
+      {/* Bottom Sheet - 장소 검색 조건*/}
       <BottomSheet
         isOpen={showBottomSheet}
         onClose={() => setShowBottomSheet(false)}

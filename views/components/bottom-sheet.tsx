@@ -16,7 +16,6 @@ interface BottomSheetProps {
 export function BottomSheet({ isOpen, onClose, onSubmit }: BottomSheetProps) {
   const [location, setLocation] = useState("강남역")
   const [category, setCategory] = useState("")
-  const [budget, setBudget] = useState("")
 
   const categories = ["한식", "일식", "중식", "양식", "카페"]
 
@@ -81,17 +80,6 @@ export function BottomSheet({ isOpen, onClose, onSubmit }: BottomSheetProps) {
                 </button>
               ))}
             </div>
-          </div>
-
-          {/* 예산 */}
-          <div className="space-y-2">
-            <Label className="text-sm font-medium text-foreground">예산</Label>
-            <Input
-              value={budget}
-              onChange={(e) => setBudget(e.target.value)}
-              placeholder="예: 1만원 ~ 2만원"
-              className="bg-gray-50 border-gray-200 focus-visible:ring-[#FEE500]"
-            />
           </div>
 
           {/* 결과 받기 버튼 */}
