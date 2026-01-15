@@ -65,12 +65,16 @@ export class WebSocketClient {
 
       // 채팅방 구독
       const destination = `/sub/room/${config.roomId}`
+      console.log('[WebSocket] Subscribing to:', destination)
+
       this.subscription = this.client!.subscribe(destination, (message: IMessage) => {
         try {
+          console.log('[WebSocket] Raw message received:', message)
           const chatMessage: ChatMessageDto = JSON.parse(message.body)
+          console.log('[WebSocket] Parsed message:', chatMessage)
           config.onMessageReceived(chatMessage)
         } catch (error) {
-          console.error('Failed to parse message:', error)
+          console.error('[WebSocket] Failed to parse message:', error, message)
         }
       })
 
@@ -79,17 +83,23 @@ export class WebSocketClient {
 
     // 연결 에러 콜백
     this.client.onStompError = (frame) => {
-      console.error('STOMP error:', frame)
+      console.error('[WebSocket] STOMP error:', frame)
+      console.error('[WebSocket] Error details:', {
+        command: frame.command,
+        headers: frame.headers,
+        body: frame.body
+      })
       config.onError?.(frame)
     }
 
     // 연결 해제 콜백
     this.client.onDisconnect = () => {
-      console.log('WebSocket disconnected')
+      console.log('[WebSocket] Disconnected')
       config.onDisconnected?.()
     }
 
     // 연결 시작
+    console.log('[WebSocket] Activating connection...')
     this.client.activate()
   }
 
@@ -112,24 +122,33 @@ export class WebSocketClient {
       type: message.type || 'TALK',
     }
 
+    console.log('[WebSocket] Sending message:', messageWithSender)
+
     this.client.publish({
       destination: '/pub/message',
       body: JSON.stringify(messageWithSender),
     })
+
+    console.log('[WebSocket] Message sent to /pub/message')
   }
 
   disconnect() {
+    console.log('[WebSocket] Disconnecting...')
+
     if (this.subscription) {
       this.subscription.unsubscribe()
       this.subscription = null
+      console.log('[WebSocket] Unsubscribed from topic')
     }
 
     if (this.client) {
       this.client.deactivate()
       this.client = null
+      console.log('[WebSocket] Client deactivated')
     }
 
     this.config = null
+    console.log('[WebSocket] Disconnect complete')
   }
 
   isConnected(): boolean {
