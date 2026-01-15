@@ -3,11 +3,16 @@
 import { useState, useRef, useEffect } from "react"
 import {
   initialMessages,
-  TRIGGER_KEYWORDS,
   Message,
 } from "../models/Message"
 import { Restaurant, mockRestaurants } from "../models/Restaurant"
-import { createWebSocketClient, ChatMessageDto } from "../lib/websocket/client"
+import {
+  createWebSocketClient,
+  ChatMessageDto,
+  RecommendationPromptDto,
+  SuggestionDto,
+  ErrorDto,
+} from "../lib/websocket/client"
 import { getUserId, getUserNickname } from "../lib/utils/user"
 
 // 채팅방 ID (실제로는 props나 context에서 가져와야 합니다)
@@ -23,6 +28,8 @@ export function useChatRoomController() {
   const [messages, setMessages] = useState<Message[]>(initialMessages)
   const [inputValue, setInputValue] = useState("")
   const [showToast, setShowToast] = useState(false)
+  const [toastMessage, setToastMessage] = useState("")
+  const [currentPrompt, setCurrentPrompt] = useState<RecommendationPromptDto | null>(null)
   const [showBottomSheet, setShowBottomSheet] = useState(false)
   const [showSelectionView, setShowSelectionView] = useState(false)
   const [showDetailModal, setShowDetailModal] = useState(false)
@@ -77,13 +84,54 @@ export function useChatRoomController() {
 
         setMessages(prev => [...prev, message])
       },
+      onRecommendationPrompt: (prompt: RecommendationPromptDto) => {
+        console.log('[ChatRoom] ===== Recommendation prompt callback =====')
+        console.log('[ChatRoom] Prompt data:', prompt)
+        console.log('[ChatRoom] analysisId:', prompt.analysisId)
+        console.log('[ChatRoom] location:', prompt.location)
+        console.log('[ChatRoom] mealType:', prompt.mealType)
+        console.log('[ChatRoom] confidence:', prompt.confidence)
+        console.log('[ChatRoom] time:', prompt.time)
+
+        // 추천 알림 토스트 표시
+        const message = `${prompt.location}에서 ${prompt.mealType} 맛집을 추천받으시겠습니까?`
+        console.log('[ChatRoom] Toast message:', message)
+
+        setCurrentPrompt(prompt)
+        setToastMessage(message)
+        setShowToast(true)
+        console.log('[ChatRoom] Toast state updated - showToast: true')
+      },
+      onSuggestion: (suggestion: SuggestionDto) => {
+        console.log('[ChatRoom] Suggestion received:', suggestion)
+        // 맛집 추천 카드 메시지 추가
+        const cardMessage: Message = {
+          id: Date.now().toString(),
+          sender: "bot",
+          content: suggestion.message,
+          time: suggestion.time,
+          type: "card",
+          cardData: {
+            title: suggestion.cardData.title,
+            image: suggestion.cardData.image,
+            restaurants: suggestion.cardData.restaurants.map(r => ({
+              ...r,
+              source: 'ai_recommended' as const,
+            })),
+          },
+        }
+
+        setMessages(prev => [...prev, cardMessage])
+        setSharedRestaurants(cardMessage.cardData!.restaurants)
+      },
+      onError: (error: ErrorDto) => {
+        console.error('[ChatRoom] Error received:', error.message)
+        // 에러 메시지 표시 (콘솔 로그만)
+        // TODO: 필요시 UI에 에러 토스트 표시
+      },
       onConnected: () => {
         console.log('WebSocket connected successfully')
         setIsConnected(true)
-      },
-      onError: (error) => {
-        console.error('WebSocket error:', error)
-        setIsConnected(false)
       },
       onDisconnected: () => {
         console.log('WebSocket disconnected')
@@ -110,10 +158,6 @@ export function useChatRoomController() {
       return () => clearTimeout(timer)
     }
   }, [showToast])
-
-  const checkTriggerKeywords = (text: string) => {
-    return TRIGGER_KEYWORDS.some(keyword => text.includes(keyword))
-  }
 
   const handleSendMessage = () => {
     if (!inputValue.trim()) return
@@ -146,25 +190,17 @@ export function useChatRoomController() {
       setMessages(prev => [...prev, newMessage])
     }
 
-    // 트리거 키워드 체크 (프론트엔드 로직 유지)
-    if (checkTriggerKeywords(inputValue)) {
-      setTimeout(() => {
-        setShowToast(true)
-      }, 1000)
-    }
-
     setInputValue("")
   }
 
   const handleToastClick = () => {
     setShowToast(false)
 
-    // 개인정보 동의 확인
-    const hasConsented = localStorage.getItem("privacy_consent_agreed")
-    if (!hasConsented) {
-      setShowPrivacyConsent(true)
-    } else {
-      setShowBottomSheet(true)
+    // 추천 요청 전송
+    if (currentPrompt) {
+      const wsClient = wsClientRef.current
+      wsClient.requestRecommendation(currentPrompt.analysisId)
+      setCurrentPrompt(null)
     }
   }
 
@@ -216,6 +252,7 @@ export function useChatRoomController() {
     messages,
     inputValue,
     showToast,
+    toastMessage,
     showBottomSheet,
     showSelectionView,
     showDetailModal,

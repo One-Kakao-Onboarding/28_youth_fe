@@ -14,9 +14,13 @@ interface SelectionViewProps {
 }
 
 export function SelectionView({ isOpen, onClose, restaurants, onShare }: SelectionViewProps) {
-  const [selectedIds, setSelectedIds] = useState<string[]>([])
+  const [selectedIds, setSelectedIds] = useState<number[]>([])
 
-  const toggleSelect = (id: string) => {
+  // 즐겨찾기와 AI 추천으로 분리
+  const favoriteRestaurants = restaurants.filter((r) => r.source === 'favorite')
+  const aiRestaurants = restaurants.filter((r) => r.source === 'ai_recommended')
+
+  const toggleSelect = (id: number) => {
     setSelectedIds((prev) => (prev.includes(id) ? prev.filter((i) => i !== id) : [...prev, id]))
   }
 
@@ -59,49 +63,101 @@ export function SelectionView({ isOpen, onClose, restaurants, onShare }: Selecti
 
         {/* 리스트 */}
         <div className="flex-1 overflow-y-auto px-5 pb-4">
-          <div className="space-y-2">
-            {restaurants.map((restaurant) => {
-              const isSelected = selectedIds.includes(restaurant.id)
-              return (
-                <button
-                  key={restaurant.id}
-                  onClick={() => toggleSelect(restaurant.id)}
-                  className={cn(
-                    "w-full flex items-center gap-3 p-3 rounded-xl transition-colors text-left",
-                    isSelected ? "bg-[rgba(254,229,0,0.1)]" : "hover:bg-gray-50",
-                  )}
-                >
-                  {/* 썸네일 */}
-                  <img
-                    src={restaurant.image || "/placeholder.svg"}
-                    alt={restaurant.name}
-                    className="w-16 h-16 rounded-lg object-cover"
-                  />
+          {/* 즐겨찾기 섹션 */}
+          {favoriteRestaurants.length > 0 && (
+            <div className="mb-6">
+              <h3 className="text-sm font-semibold text-gray-700 mb-3 flex items-center gap-2">
+                <Star className="w-4 h-4 fill-yellow-400 text-yellow-400" />
+                카카오맵 즐겨찾기
+              </h3>
+              <div className="space-y-2">
+                {favoriteRestaurants.map((restaurant) => {
+                  const isSelected = selectedIds.includes(restaurant.id)
+                  return (
+                    <button
+                      key={restaurant.id}
+                      onClick={() => toggleSelect(restaurant.id)}
+                      className={cn(
+                        "w-full flex items-center gap-3 p-3 rounded-xl transition-colors text-left",
+                        isSelected ? "bg-[rgba(254,229,0,0.1)]" : "hover:bg-gray-50",
+                      )}
+                    >
+                      <img
+                        src={restaurant.image || "/placeholder.svg"}
+                        alt={restaurant.name}
+                        className="w-16 h-16 rounded-lg object-cover"
+                      />
+                      <div className="flex-1 min-w-0">
+                        <h3 className="font-semibold text-sm text-foreground truncate">{restaurant.name}</h3>
+                        <p className="text-xs text-gray-500">{restaurant.category}</p>
+                        <div className="flex items-center gap-1 mt-1">
+                          <Star className="w-3 h-3 fill-yellow-400 text-yellow-400" />
+                          <span className="text-xs font-medium text-foreground">{restaurant.rating}</span>
+                          <span className="text-xs text-gray-400">• {restaurant.distance}</span>
+                        </div>
+                      </div>
+                      <div
+                        className={cn(
+                          "w-6 h-6 rounded-full flex items-center justify-center transition-colors",
+                          isSelected ? "bg-[#FEE500]" : "bg-gray-200",
+                        )}
+                      >
+                        {isSelected && <Check className="w-4 h-4 text-foreground" />}
+                      </div>
+                    </button>
+                  )
+                })}
+              </div>
+            </div>
+          )}
 
-                  {/* 텍스트 */}
-                  <div className="flex-1 min-w-0">
-                    <h3 className="font-semibold text-sm text-foreground truncate">{restaurant.name}</h3>
-                    <p className="text-xs text-gray-500">{restaurant.category}</p>
-                    <div className="flex items-center gap-1 mt-1">
-                      <Star className="w-3 h-3 fill-yellow-400 text-yellow-400" />
-                      <span className="text-xs font-medium text-foreground">{restaurant.rating}</span>
-                      <span className="text-xs text-gray-400">• {restaurant.distance}</span>
-                    </div>
-                  </div>
-
-                  {/* 체크 아이콘 */}
-                  <div
-                    className={cn(
-                      "w-6 h-6 rounded-full flex items-center justify-center transition-colors",
-                      isSelected ? "bg-[#FEE500]" : "bg-gray-200",
-                    )}
-                  >
-                    {isSelected && <Check className="w-4 h-4 text-foreground" />}
-                  </div>
-                </button>
-              )
-            })}
-          </div>
+          {/* AI 추천 섹션 */}
+          {aiRestaurants.length > 0 && (
+            <div>
+              <h3 className="text-sm font-semibold text-gray-700 mb-3 flex items-center gap-2">
+                <span className="text-base">✨</span>
+                AI 맞춤 추천
+              </h3>
+              <div className="space-y-2">
+                {aiRestaurants.map((restaurant) => {
+                  const isSelected = selectedIds.includes(restaurant.id)
+                  return (
+                    <button
+                      key={restaurant.id}
+                      onClick={() => toggleSelect(restaurant.id)}
+                      className={cn(
+                        "w-full flex items-center gap-3 p-3 rounded-xl transition-colors text-left",
+                        isSelected ? "bg-[rgba(254,229,0,0.1)]" : "hover:bg-gray-50",
+                      )}
+                    >
+                      <img
+                        src={restaurant.image || "/placeholder.svg"}
+                        alt={restaurant.name}
+                        className="w-16 h-16 rounded-lg object-cover"
+                      />
+                      <div className="flex-1 min-w-0">
+                        <h3 className="font-semibold text-sm text-foreground truncate">{restaurant.name}</h3>
+                        <p className="text-xs text-gray-500">{restaurant.category}</p>
+                        <div className="flex items-center gap-1 mt-1">
+                          <Star className="w-3 h-3 fill-yellow-400 text-yellow-400" />
+                          <span className="text-xs font-medium text-foreground">{restaurant.rating}</span>
+                          <span className="text-xs text-gray-400">• {restaurant.distance}</span>
+                        </div>
+                      </div>
+                      <div
+                        className={cn(
+                          "w-6 h-6 rounded-full flex items-center justify-center transition-colors",
+                          isSelected ? "bg-[#FEE500]" : "bg-gray-200",
+                        )}
+                      >
+                        {isSelected && <Check className="w-4 h-4 text-foreground" />}
+                      </div>
+                    </button>
+                  )
+                })}
+              </div>
+            </div>
+          )}
         </div>
 
         {/* 공유 버튼 */}

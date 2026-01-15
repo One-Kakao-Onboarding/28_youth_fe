@@ -4,10 +4,11 @@ import { cn } from "@/lib/utils"
 
 interface TriggerToastProps {
   show: boolean
+  message: string
   onClick: () => void
 }
 
-export function TriggerToast({ show, onClick }: TriggerToastProps) {
+export function TriggerToast({ show, message, onClick }: TriggerToastProps) {
   return (
     <div
       className={cn(
@@ -19,7 +20,7 @@ export function TriggerToast({ show, onClick }: TriggerToastProps) {
         onClick={onClick}
         className="bg-[rgba(50,50,50,0.9)] text-white px-4 py-2.5 rounded-full text-sm font-medium shadow-lg hover:bg-[rgba(40,40,40,0.95)] transition-colors"
       >
-        💡 강남 근처 맛집을 찾아드릴까요?
+        💡 {message || "맛집을 찾아드릴까요?"}
       </button>
     </div>
   )

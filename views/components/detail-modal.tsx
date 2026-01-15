@@ -12,6 +12,10 @@ interface DetailModalProps {
 }
 
 export function DetailModal({ isOpen, onClose, restaurants }: DetailModalProps) {
+  // 즐겨찾기와 AI 추천으로 분리
+  const favoriteRestaurants = restaurants.filter((r) => r.source === 'favorite')
+  const aiRestaurants = restaurants.filter((r) => r.source === 'ai_recommended')
+
   return (
     <>
       {/* 백드롭 */}
@@ -32,57 +36,109 @@ export function DetailModal({ isOpen, onClose, restaurants }: DetailModalProps) 
       >
         {/* 헤더 */}
         <header className="flex items-center justify-between px-4 py-3 border-b border-gray-100">
-          <h2 className="text-lg font-semibold text-foreground">유라님의 별표 맛집 추천 리스트</h2>
+          <h2 className="text-lg font-semibold text-foreground">맛집 추천 리스트</h2>
           <Button variant="ghost" size="icon" onClick={onClose}>
             <X className="w-5 h-5" />
           </Button>
         </header>
 
         {/* 카드 리스트 */}
-        <div className="flex-1 overflow-y-auto p-4 space-y-4">
-          {restaurants.map((restaurant) => (
-            <div key={restaurant.id} className="bg-white border border-gray-200 rounded-2xl overflow-hidden shadow-sm">
-              {/* 이미지 */}
-              <img
-                src={restaurant.image || "/placeholder.svg"}
-                alt={restaurant.name}
-                className="w-full h-40 object-cover"
-              />
-
-              {/* 정보 */}
-              <div className="p-4">
-                <div className="flex items-start justify-between">
-                  <div>
-                    <h3 className="font-bold text-base text-foreground">{restaurant.name}</h3>
-                    <p className="text-sm text-gray-500 mt-0.5">{restaurant.category}</p>
+        <div className="flex-1 overflow-y-auto p-4">
+          {/* 즐겨찾기 섹션 */}
+          {favoriteRestaurants.length > 0 && (
+            <div className="mb-6">
+              <h3 className="text-base font-bold text-gray-800 mb-3 flex items-center gap-2">
+                <Star className="w-5 h-5 fill-yellow-400 text-yellow-400" />
+                카카오맵 즐겨찾기
+              </h3>
+              <div className="space-y-4">
+                {favoriteRestaurants.map((restaurant) => (
+                  <div key={restaurant.id} className="bg-white border border-gray-200 rounded-2xl overflow-hidden shadow-sm">
+                    <img
+                      src={restaurant.image || "/placeholder.svg"}
+                      alt={restaurant.name}
+                      className="w-full h-40 object-cover"
+                    />
+                    <div className="p-4">
+                      <div className="flex items-start justify-between">
+                        <div>
+                          <h3 className="font-bold text-base text-foreground">{restaurant.name}</h3>
+                          <p className="text-sm text-gray-500 mt-0.5">{restaurant.category}</p>
+                        </div>
+                        <div className="flex items-center gap-1 bg-[#FEE500] px-2 py-1 rounded-full">
+                          <Star className="w-3.5 h-3.5 fill-foreground text-foreground" />
+                          <span className="text-sm font-semibold text-foreground">{restaurant.rating}</span>
+                        </div>
+                      </div>
+                      <div className="flex items-center gap-2 mt-3 text-gray-600">
+                        <MapPin className="w-4 h-4" />
+                        <span className="text-sm">{restaurant.address}</span>
+                      </div>
+                      <div className="flex items-center justify-between mt-3">
+                        <span className="text-sm text-gray-500">{restaurant.distance}</span>
+                        <Button
+                          variant="outline"
+                          size="sm"
+                          className="text-[#3182F6] border-[#3182F6] hover:bg-[#3182F6]/10 bg-transparent"
+                        >
+                          <Navigation className="w-4 h-4 mr-1" />
+                          길찾기
+                        </Button>
+                      </div>
+                    </div>
                   </div>
-                  <div className="flex items-center gap-1 bg-[#FEE500] px-2 py-1 rounded-full">
-                    <Star className="w-3.5 h-3.5 fill-foreground text-foreground" />
-                    <span className="text-sm font-semibold text-foreground">{restaurant.rating}</span>
-                  </div>
-                </div>
-
-                {/* 주소 */}
-                <div className="flex items-center gap-2 mt-3 text-gray-600">
-                  <MapPin className="w-4 h-4" />
-                  <span className="text-sm">{restaurant.address}</span>
-                </div>
-
-                {/* 거리 + 길찾기 */}
-                <div className="flex items-center justify-between mt-3">
-                  <span className="text-sm text-gray-500">{restaurant.distance}</span>
-                  <Button
-                    variant="outline"
-                    size="sm"
-                    className="text-[#3182F6] border-[#3182F6] hover:bg-[#3182F6]/10 bg-transparent"
-                  >
-                    <Navigation className="w-4 h-4 mr-1" />
-                    길찾기
-                  </Button>
-                </div>
+                ))}
               </div>
             </div>
-          ))}
+          )}
+
+          {/* AI 추천 섹션 */}
+          {aiRestaurants.length > 0 && (
+            <div>
+              <h3 className="text-base font-bold text-gray-800 mb-3 flex items-center gap-2">
+                <span className="text-lg">✨</span>
+                AI 맞춤 추천
+              </h3>
+              <div className="space-y-4">
+                {aiRestaurants.map((restaurant) => (
+                  <div key={restaurant.id} className="bg-white border border-gray-200 rounded-2xl overflow-hidden shadow-sm">
+                    <img
+                      src={restaurant.image || "/placeholder.svg"}
+                      alt={restaurant.name}
+                      className="w-full h-40 object-cover"
+                    />
+                    <div className="p-4">
+                      <div className="flex items-start justify-between">
+                        <div>
+                          <h3 className="font-bold text-base text-foreground">{restaurant.name}</h3>
+                          <p className="text-sm text-gray-500 mt-0.5">{restaurant.category}</p>
+                        </div>
+                        <div className="flex items-center gap-1 bg-[#FEE500] px-2 py-1 rounded-full">
+                          <Star className="w-3.5 h-3.5 fill-foreground text-foreground" />
+                          <span className="text-sm font-semibold text-foreground">{restaurant.rating}</span>
+                        </div>
+                      </div>
+                      <div className="flex items-center gap-2 mt-3 text-gray-600">
+                        <MapPin className="w-4 h-4" />
+                        <span className="text-sm">{restaurant.address}</span>
+                      </div>
+                      <div className="flex items-center justify-between mt-3">
+                        <span className="text-sm text-gray-500">{restaurant.distance}</span>
+                        <Button
+                          variant="outline"
+                          size="sm"
+                          className="text-[#3182F6] border-[#3182F6] hover:bg-[#3182F6]/10 bg-transparent"
+                        >
+                          <Navigation className="w-4 h-4 mr-1" />
+                          길찾기
+                        </Button>
+                      </div>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+          )}
         </div>
 
         {/* 하단 버튼 */}

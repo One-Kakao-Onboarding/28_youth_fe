@@ -17,6 +17,7 @@ interface ChatRoomViewProps {
   messages: Message[]
   inputValue: string
   showToast: boolean
+  toastMessage: string
   showBottomSheet: boolean
   showSelectionView: boolean
   showDetailModal: boolean
@@ -41,6 +42,7 @@ export function ChatRoomView({
   messages,
   inputValue,
   showToast,
+  toastMessage,
   showBottomSheet,
   showSelectionView,
   showDetailModal,
@@ -99,7 +101,7 @@ export function ChatRoomView({
       </div>
 
       {/* Toast */}
-      <TriggerToast show={showToast} onClick={handleToastClick} />
+      <TriggerToast show={showToast} message={toastMessage} onClick={handleToastClick} />
 
       {/* Input */}
       <div className="bg-white px-3 py-2 flex items-center gap-2">
