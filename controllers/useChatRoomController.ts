@@ -18,6 +18,37 @@ import { getUserId, getUserNickname } from "../lib/utils/user"
 // 채팅방 ID (실제로는 props나 context에서 가져와야 합니다)
 const ROOM_ID = 1
 
+// 식사 종류 한글 변환 맵
+const MEAL_TYPE_MAP: { [key: string]: string } = {
+  'breakfast': '아침',
+  'lunch': '점심',
+  'dinner': '저녁',
+  'snack': '간식',
+  'late-night': '야식',
+}
+
+// 토스트 메시지 생성 헬퍼 함수
+function buildToastMessage(location?: string | null, mealType?: string | null): string {
+  // 영어 -> 한글 변환
+  const koreanMealType = mealType && MEAL_TYPE_MAP[mealType.toLowerCase()]
+    ? MEAL_TYPE_MAP[mealType.toLowerCase()]
+    : mealType
+
+  // null/undefined 체크 및 메시지 조합
+  const hasLocation = location && location.trim() !== ''
+  const hasMealType = koreanMealType && koreanMealType.trim() !== ''
+
+  if (hasLocation && hasMealType) {
+    return `${location}에서 ${koreanMealType} 맛집을 추천받으시겠습니까?`
+  } else if (hasLocation) {
+    return `${location} 맛집을 추천받으시겠습니까?`
+  } else if (hasMealType) {
+    return `${koreanMealType} 맛집을 추천받으시겠습니까?`
+  } else {
+    return `맛집을 추천받으시겠습니까?`
+  }
+}
+
 export function useChatRoomController() {
   // 서버에서 해야할 일:
   // 1. 해당 톡방의 모든 메세지 조회 -> messages 변수에 담아주기
@@ -80,8 +111,13 @@ export function useChatRoomController() {
           }
 
           console.log('[ChatRoom] Converting to recommendation prompt:', prompt)
+
+          // 토스트 메시지 생성
+          const toastMsg = buildToastMessage(prompt.location, prompt.mealType)
+          console.log('[ChatRoom] Toast message:', toastMsg)
+
           setCurrentPrompt(prompt)
-          setToastMessage(`${prompt.location}에서 ${prompt.mealType} 맛집을 추천받으시겠습니까?`)
+          setToastMessage(toastMsg)
           setShowToast(true)
           return // 채팅 메시지로 추가하지 않음
         }
@@ -117,7 +153,7 @@ export function useChatRoomController() {
         console.log('[ChatRoom] time:', prompt.time)
 
         // 추천 알림 토스트 표시
-        const message = `${prompt.location}에서 ${prompt.mealType} 맛집을 추천받으시겠습니까?`
+        const message = buildToastMessage(prompt.location, prompt.mealType)
         console.log('[ChatRoom] Toast message:', message)
 
         setCurrentPrompt(prompt)
