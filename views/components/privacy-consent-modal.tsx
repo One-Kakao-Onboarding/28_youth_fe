@@ -35,13 +35,13 @@ export function PrivacyConsentModal({ isOpen, onAgree, onClose }: PrivacyConsent
 
           {/* 제목 */}
           <h2 className="text-xl font-bold text-center text-foreground">
-            AI 맞춤 맛집 추천
+            AI 맞춤 장소 추천
           </h2>
 
           {/* 설명 */}
           <div className="space-y-3 text-sm text-gray-700">
             <p>
-              더 정확한 맛집 추천을 위해 다음 정보를 활용합니다:
+              더 정확한 장소 추천을 위해 다음 정보를 활용합니다:
             </p>
             <ul className="space-y-2 pl-5">
               <li className="flex items-start">
@@ -49,16 +49,12 @@ export function PrivacyConsentModal({ isOpen, onAgree, onClose }: PrivacyConsent
                 <span>대화 내용 분석으로 취향 파악</span>
               </li>
               <li className="flex items-start">
-                <span className="mr-2">📍</span>
-                <span>위치 정보로 주변 맛집 추천</span>
-              </li>
-              <li className="flex items-start">
                 <span className="mr-2">⭐</span>
-                <span>즐겨찾기 기반 맞춤 추천</span>
+                <span>카카오 맵 즐겨찾기 기반 맞춤 추천</span>
               </li>
             </ul>
             <p className="text-xs text-gray-500 pt-2">
-              * 수집된 정보는 맛집 추천 목적으로만 사용되며, 언제든지 설정에서 철회 가능합니다.
+              * 수집된 정보는 장소 추천 목적으로만 사용되며, 언제든지 설정에서 철회 가능합니다.
             </p>
           </div>
 
@@ -68,7 +64,7 @@ export function PrivacyConsentModal({ isOpen, onAgree, onClose }: PrivacyConsent
               onClick={onAgree}
               className="w-full bg-[#FEE500] hover:bg-[#FDD800] text-foreground font-semibold py-6 text-base"
             >
-              동의하고 맛집 추천받기
+              동의하고 장소 추천받기
             </Button>
             <Button
               onClick={onClose}
