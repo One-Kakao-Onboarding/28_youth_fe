@@ -13,7 +13,7 @@ export function useChatRoomController() {
   // 서버에서 해야할 일: 
   // 1. 해당 톡방의 모든 메세지 조회 -> messages 변수에 담아주기
   // 2. 새로운 메세지를 웹 소켓을 활용해 추가하기 -> messages 변수에 담아주기
-  // 3. 메세지에 checkTriggerKeywords가 해당한다면, 인공지능으로 장소를 추천해줘야하는 상황인지를 체크
+  // 3. 현재 내가 보낸 메세지에 checkTriggerKeywords가 해당한다면, 내가 이전에 보낸 메세지까지 최대 10개를 포함해서 인공지능으로 장소를 추천해줘야하는 상황인지를 체크
   // 3-1. 장소를 추천할 수 있다면, 추천 가능성과 [약속 장소 지역, 약속 상황] 그리고 토스트 메세지를 서버에서 제공
   // 4. 서버에서 [약속 장소 지역, 약속 상황]을 받으면, 사용자의 맵 데이터에서 해당 지역의 즐겨찾기 한 곳 그리고 취향에 맞는 장소를 추천해준다.
   const [messages, setMessages] = useState<Message[]>(initialMessages)
