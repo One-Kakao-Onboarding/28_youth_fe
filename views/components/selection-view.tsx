@@ -51,7 +51,7 @@ export function SelectionView({ isOpen, onClose, restaurants, onShare }: Selecti
 
         {/* 헤더 */}
         <div className="flex items-center justify-between px-5 pb-4">
-          <h2 className="text-lg font-semibold text-foreground">추천 맛집 선택</h2>
+          <h2 className="text-lg font-semibold text-foreground">유라님의 별표 맛집 소환!</h2>
           <Button variant="ghost" size="icon" onClick={onClose}>
             <X className="w-5 h-5" />
           </Button>

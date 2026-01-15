@@ -61,7 +61,10 @@ export function ChatRoomView({
   setShowDetailModal,
 }: ChatRoomViewProps) {
   return (
-    <div className="flex flex-col h-screen bg-[#B2C7D9] max-w-md mx-auto">
+    <>
+    <div className="flex items-center justify-center min-h-screen bg-gray-900 p-4">
+      {/* Mobile Phone Frame */}
+      <div className="flex flex-col h-[calc(100vh-2rem)] w-full max-w-md bg-[#B2C7D9] rounded-3xl shadow-2xl overflow-hidden">
       {/* Header */}
       <header className="flex items-center justify-between px-4 py-3 bg-[#B2C7D9]">
         <div className="flex items-center gap-3">
@@ -126,35 +129,38 @@ export function ChatRoomView({
           <Send className="w-5 h-5" />
         </Button>
       </div>
-
-      {/* Bottom Sheet - 장소 검색 조건*/}
-      <BottomSheet
-        isOpen={showBottomSheet}
-        onClose={() => setShowBottomSheet(false)}
-        onSubmit={handleConditionSubmit}
-      />
-
-      {/* Selection View */}
-      <SelectionView
-        isOpen={showSelectionView}
-        onClose={() => setShowSelectionView(false)}
-        restaurants={mockRestaurants}
-        onShare={handleShareSelected}
-      />
-
-      {/* Detail Modal */}
-      <DetailModal
-        isOpen={showDetailModal}
-        onClose={() => setShowDetailModal(false)}
-        restaurants={sharedRestaurants}
-      />
-
-      {/* Privacy Consent Modal */}
-      <PrivacyConsentModal
-        isOpen={showPrivacyConsent}
-        onAgree={handlePrivacyAgree}
-        onClose={handlePrivacyClose}
-      />
+      </div>
     </div>
+
+    {/* Modals - Outside mobile frame */}
+    {/* Bottom Sheet - 장소 검색 조건*/}
+    <BottomSheet
+      isOpen={showBottomSheet}
+      onClose={() => setShowBottomSheet(false)}
+      onSubmit={handleConditionSubmit}
+    />
+
+    {/* Selection View */}
+    <SelectionView
+      isOpen={showSelectionView}
+      onClose={() => setShowSelectionView(false)}
+      restaurants={mockRestaurants}
+      onShare={handleShareSelected}
+    />
+
+    {/* Detail Modal */}
+    <DetailModal
+      isOpen={showDetailModal}
+      onClose={() => setShowDetailModal(false)}
+      restaurants={sharedRestaurants}
+    />
+
+    {/* Privacy Consent Modal */}
+    <PrivacyConsentModal
+      isOpen={showPrivacyConsent}
+      onAgree={handlePrivacyAgree}
+      onClose={handlePrivacyClose}
+    />
+    </>
   )
 }

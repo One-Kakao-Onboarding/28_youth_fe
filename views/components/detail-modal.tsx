@@ -32,7 +32,7 @@ export function DetailModal({ isOpen, onClose, restaurants }: DetailModalProps) 
       >
         {/* 헤더 */}
         <header className="flex items-center justify-between px-4 py-3 border-b border-gray-100">
-          <h2 className="text-lg font-semibold text-foreground">강남 맛집 추천 리스트</h2>
+          <h2 className="text-lg font-semibold text-foreground">유라님의 별표 맛집 추천 리스트</h2>
           <Button variant="ghost" size="icon" onClick={onClose}>
             <X className="w-5 h-5" />
           </Button>
