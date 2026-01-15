@@ -15,7 +15,7 @@ export interface Message {
 
 export const TRIGGER_KEYWORDS = ["강남", "건대", "점심", "저녁", "뭐 먹지", "메뉴 추천", "배고파", "밥", "식사", "레스토랑", "맛집", "카페", "디저트", "오늘", "내일", "주말", "어디", "추천", "뭐해?", "뭐하니?"]
 export const COOLTIME_MS = 5 * 60 * 1000 // 5분
-
+ 
 export const initialMessages: Message[] = [
   {
     id: "1",
