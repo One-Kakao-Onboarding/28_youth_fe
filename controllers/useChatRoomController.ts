@@ -3,7 +3,6 @@
 import { useState, useRef, useEffect } from "react"
 import {
   initialMessages,
-  COOLTIME_MS,
   TRIGGER_KEYWORDS,
   Message,
 } from "../models/Message"
@@ -25,7 +24,6 @@ export function useChatRoomController() {
   const [showPrivacyConsent, setShowPrivacyConsent] = useState(false)
   const [selectedRestaurants, setSelectedRestaurants] = useState<Restaurant[]>([])
   const [sharedRestaurants, setSharedRestaurants] = useState<Restaurant[]>([])
-  const lastTriggerTime = useRef<number>(0)
   const messagesEndRef = useRef<HTMLDivElement>(null)
 
   const scrollToBottom = () => {
@@ -67,12 +65,7 @@ export function useChatRoomController() {
 
     setMessages(prev => [...prev, newMessage])
 
-    const now = Date.now()
-    if (
-      checkTriggerKeywords(inputValue) &&
-      now - lastTriggerTime.current > COOLTIME_MS
-    ) {
-      lastTriggerTime.current = now
+    if (checkTriggerKeywords(inputValue)) {
       setTimeout(() => {
         setShowToast(true)
       }, 1000)
