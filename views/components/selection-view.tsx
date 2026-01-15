@@ -83,7 +83,7 @@ export function SelectionView({ isOpen, onClose, restaurants, onShare }: Selecti
                       )}
                     >
                       <img
-                        src={restaurant.image || "/placeholder.svg"}
+                        src={restaurant.image || "/28_youth_fe/placeholder.svg"}
                         alt={restaurant.name}
                         className="w-16 h-16 rounded-lg object-cover"
                       />
@@ -131,7 +131,7 @@ export function SelectionView({ isOpen, onClose, restaurants, onShare }: Selecti
                       )}
                     >
                       <img
-                        src={restaurant.image || "/placeholder.svg"}
+                        src={restaurant.image || "/28_youth_fe/placeholder.svg"}
                         alt={restaurant.name}
                         className="w-16 h-16 rounded-lg object-cover"
                       />

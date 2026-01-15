@@ -295,7 +295,7 @@ export function useChatRoomController() {
       type: "card",
       cardData: {
         title: "유라님의 지도에서 쏙 골라왔어요!",
-        image: "/gangnam-food-map-restaurants.jpg",
+        image: "/28_youth_fe/gangnam-food-map-restaurants.jpg",
         restaurants: restaurants,
       },
     }

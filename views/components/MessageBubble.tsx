@@ -32,7 +32,7 @@ export function MessageBubble({
                 <div key={restaurant.id} className="flex gap-3 p-3">
                   {/* 왼쪽: 이미지 */}
                   <img
-                    src={restaurant.image || "/placeholder.svg"}
+                    src={restaurant.image || "/28_youth_fe/placeholder.svg"}
                     alt={restaurant.name}
                     className="w-16 h-16 rounded-lg object-cover flex-shrink-0"
                   />
@@ -85,7 +85,7 @@ export function MessageBubble({
   return (
     <div className="flex items-start gap-2">
       <Avatar className="w-10 h-10">
-        <AvatarImage src="/korean-woman-profile.png" />
+        <AvatarImage src="/28_youth_fe/korean-woman-profile.png" />
         <AvatarFallback>민지</AvatarFallback>
       </Avatar>
       <div className="flex flex-col">

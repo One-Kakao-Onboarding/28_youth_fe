@@ -55,7 +55,7 @@ export function DetailModal({ isOpen, onClose, restaurants }: DetailModalProps) 
                 {favoriteRestaurants.map((restaurant) => (
                   <div key={restaurant.id} className="bg-white border border-gray-200 rounded-2xl overflow-hidden shadow-sm">
                     <img
-                      src={restaurant.image || "/placeholder.svg"}
+                      src={restaurant.image || "/28_youth_fe/placeholder.svg"}
                       alt={restaurant.name}
                       className="w-full h-40 object-cover"
                     />
@@ -103,7 +103,7 @@ export function DetailModal({ isOpen, onClose, restaurants }: DetailModalProps) 
                 {aiRestaurants.map((restaurant) => (
                   <div key={restaurant.id} className="bg-white border border-gray-200 rounded-2xl overflow-hidden shadow-sm">
                     <img
-                      src={restaurant.image || "/placeholder.svg"}
+                      src={restaurant.image || "/28_youth_fe/placeholder.svg"}
                       alt={restaurant.name}
                       className="w-full h-40 object-cover"
                     />
