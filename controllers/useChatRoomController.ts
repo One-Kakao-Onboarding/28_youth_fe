@@ -36,6 +36,16 @@ export function useChatRoomController() {
     scrollToBottom()
   }, [messages])
 
+  useEffect(() => {
+    if (showToast) {
+      const timer = setTimeout(() => {
+        setShowToast(false)
+      }, 3000)
+
+      return () => clearTimeout(timer)
+    }
+  }, [showToast])
+
   const checkTriggerKeywords = (text: string) => {
     return TRIGGER_KEYWORDS.some(keyword => text.includes(keyword))
   }
