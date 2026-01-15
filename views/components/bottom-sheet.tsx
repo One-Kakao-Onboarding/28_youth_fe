@@ -15,9 +15,7 @@ interface BottomSheetProps {
 
 export function BottomSheet({ isOpen, onClose, onSubmit }: BottomSheetProps) {
   const [location, setLocation] = useState("강남역")
-  const [category, setCategory] = useState("")
-
-  const categories = ["한식", "일식", "중식", "양식", "카페"]
+  const [situation, setSituation] = useState("")
 
   return (
     <>
@@ -63,23 +61,15 @@ export function BottomSheet({ isOpen, onClose, onSubmit }: BottomSheetProps) {
             />
           </div>
 
-          {/* 카테고리 */}
+          {/* 상황 */}
           <div className="space-y-2">
-            <Label className="text-sm font-medium text-foreground">카테고리</Label>
-            <div className="flex flex-wrap gap-2">
-              {categories.map((cat) => (
-                <button
-                  key={cat}
-                  onClick={() => setCategory(cat)}
-                  className={cn(
-                    "px-4 py-2 rounded-full text-sm font-medium transition-colors",
-                    category === cat ? "bg-[#FEE500] text-foreground" : "bg-gray-100 text-gray-600 hover:bg-gray-200",
-                  )}
-                >
-                  {cat}
-                </button>
-              ))}
-            </div>
+            <Label className="text-sm font-medium text-foreground">상황</Label>
+            <Input
+              value={situation}
+              onChange={(e) => setSituation(e.target.value)}
+              placeholder="예: 점심 식사, 회식, 데이트"
+              className="bg-gray-50 border-gray-200 focus-visible:ring-[#FEE500]"
+            />
           </div>
 
           {/* 결과 받기 버튼 */}
