@@ -12,6 +12,9 @@ export function MessageBubble({
   const isUser = message.sender === "user"
 
   if (message.type === "card" && message.cardData) {
+    // 최대 4개까지만 표시
+    const displayRestaurants = message.cardData.restaurants.slice(0, 4)
+
     return (
       <div className={cn("flex", isUser ? "justify-end" : "justify-start")}>
         <div className="max-w-[280px]">
@@ -22,11 +25,35 @@ export function MessageBubble({
                 {message.cardData.title}
               </h3>
             </div>
-            <img
-              src={message.cardData.image || "/placeholder.svg"}
-              alt="맛집 지도"
-              className="w-full h-32 object-cover"
-            />
+
+            {/* 레스토랑 리스트 */}
+            <div className="divide-y divide-gray-100">
+              {displayRestaurants.map((restaurant) => (
+                <div key={restaurant.id} className="flex gap-3 p-3">
+                  {/* 왼쪽: 이미지 */}
+                  <img
+                    src={restaurant.image || "/placeholder.svg"}
+                    alt={restaurant.name}
+                    className="w-16 h-16 rounded-lg object-cover flex-shrink-0"
+                  />
+
+                  {/* 오른쪽: 정보 */}
+                  <div className="flex-1 min-w-0">
+                    <h4 className="font-semibold text-sm text-foreground truncate">
+                      {restaurant.name}
+                    </h4>
+                    <p className="text-xs text-gray-500 truncate">
+                      {restaurant.category}
+                    </p>
+                    <div className="flex items-center gap-1 mt-1">
+                      <span className="text-xs text-yellow-500">★</span>
+                      <span className="text-xs text-gray-600">{restaurant.rating}</span>
+                    </div>
+                  </div>
+                </div>
+              ))}
+            </div>
+
             <div className="border-t border-gray-200">
               <button
                 onClick={onDetailClick}
