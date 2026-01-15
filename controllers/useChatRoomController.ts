@@ -63,7 +63,30 @@ export function useChatRoomController() {
       nickname,
       roomId: ROOM_ID,
       onMessageReceived: (chatMessage: ChatMessageDto) => {
-        // 백엔드에서 받은 메시지를 프론트엔드 Message 형식으로 변환
+        console.log('[ChatRoom] Message received:', chatMessage)
+
+        // 메시지 타입 체크 (백엔드가 채팅 채널로 추천 알림을 보낼 경우 대응)
+        if ((chatMessage as any).type === 'recommendation-prompt') {
+          console.log('[ChatRoom] Detected recommendation-prompt in chat channel')
+          const promptData = chatMessage as any
+
+          // 추천 알림으로 처리
+          const prompt: RecommendationPromptDto = {
+            analysisId: promptData.analysisId,
+            location: promptData.location,
+            mealType: promptData.mealType,
+            confidence: promptData.confidence,
+            time: promptData.time,
+          }
+
+          console.log('[ChatRoom] Converting to recommendation prompt:', prompt)
+          setCurrentPrompt(prompt)
+          setToastMessage(`${prompt.location}에서 ${prompt.mealType} 맛집을 추천받으시겠습니까?`)
+          setShowToast(true)
+          return // 채팅 메시지로 추가하지 않음
+        }
+
+        // 일반 채팅 메시지 처리
         const message: Message = {
           id: chatMessage.id?.toString() || Date.now().toString(),
           sender: chatMessage.senderId === userId ? "user" : "bot",
