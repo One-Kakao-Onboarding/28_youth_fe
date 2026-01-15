@@ -8,6 +8,7 @@ import { TriggerToast } from "./components/trigger-toast"
 import { BottomSheet } from "./components/bottom-sheet"
 import { SelectionView } from "./components/selection-view"
 import { DetailModal } from "./components/detail-modal"
+import { PrivacyConsentModal } from "./components/privacy-consent-modal"
 import { MessageBubble } from "./components/MessageBubble"
 import { Message } from "../models/Message"
 import { Restaurant } from "../models/Restaurant"
@@ -19,6 +20,7 @@ interface ChatRoomViewProps {
   showBottomSheet: boolean
   showSelectionView: boolean
   showDetailModal: boolean
+  showPrivacyConsent: boolean
   sharedRestaurants: Restaurant[]
   messagesEndRef: React.RefObject<HTMLDivElement | null>
   mockRestaurants: Restaurant[]
@@ -28,6 +30,8 @@ interface ChatRoomViewProps {
   handleConditionSubmit: () => void
   handleShareSelected: (restaurants: Restaurant[]) => void
   handleDetailClick: () => void
+  handlePrivacyAgree: () => void
+  handlePrivacyClose: () => void
   setShowBottomSheet: (show: boolean) => void
   setShowSelectionView: (show: boolean) => void
   setShowDetailModal: (show: boolean) => void
@@ -40,6 +44,7 @@ export function ChatRoomView({
   showBottomSheet,
   showSelectionView,
   showDetailModal,
+  showPrivacyConsent,
   sharedRestaurants,
   messagesEndRef,
   mockRestaurants,
@@ -49,6 +54,8 @@ export function ChatRoomView({
   handleConditionSubmit,
   handleShareSelected,
   handleDetailClick,
+  handlePrivacyAgree,
+  handlePrivacyClose,
   setShowBottomSheet,
   setShowSelectionView,
   setShowDetailModal,
@@ -140,6 +147,13 @@ export function ChatRoomView({
         isOpen={showDetailModal}
         onClose={() => setShowDetailModal(false)}
         restaurants={sharedRestaurants}
+      />
+
+      {/* Privacy Consent Modal */}
+      <PrivacyConsentModal
+        isOpen={showPrivacyConsent}
+        onAgree={handlePrivacyAgree}
+        onClose={handlePrivacyClose}
       />
     </div>
   )

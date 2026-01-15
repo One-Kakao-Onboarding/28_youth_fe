@@ -22,6 +22,7 @@ export function useChatRoomController() {
   const [showBottomSheet, setShowBottomSheet] = useState(false)
   const [showSelectionView, setShowSelectionView] = useState(false)
   const [showDetailModal, setShowDetailModal] = useState(false)
+  const [showPrivacyConsent, setShowPrivacyConsent] = useState(false)
   const [selectedRestaurants, setSelectedRestaurants] = useState<Restaurant[]>([])
   const [sharedRestaurants, setSharedRestaurants] = useState<Restaurant[]>([])
   const lastTriggerTime = useRef<number>(0)
@@ -72,7 +73,24 @@ export function useChatRoomController() {
 
   const handleToastClick = () => {
     setShowToast(false)
+
+    // 개인정보 동의 확인
+    const hasConsented = localStorage.getItem("privacy_consent_agreed")
+    if (!hasConsented) {
+      setShowPrivacyConsent(true)
+    } else {
+      setShowBottomSheet(true)
+    }
+  }
+
+  const handlePrivacyAgree = () => {
+    localStorage.setItem("privacy_consent_agreed", "true")
+    setShowPrivacyConsent(false)
     setShowBottomSheet(true)
+  }
+
+  const handlePrivacyClose = () => {
+    setShowPrivacyConsent(false)
   }
 
   const handleConditionSubmit = () => {
@@ -96,7 +114,7 @@ export function useChatRoomController() {
       }),
       type: "card",
       cardData: {
-        title: "강남 맛집 추천 리스트",
+        title: "맛깨비 추천 리스트",
         image: "/gangnam-food-map-restaurants.jpg",
         restaurants: restaurants,
       },
@@ -116,6 +134,7 @@ export function useChatRoomController() {
     showBottomSheet,
     showSelectionView,
     showDetailModal,
+    showPrivacyConsent,
     selectedRestaurants,
     sharedRestaurants,
     messagesEndRef,
@@ -126,6 +145,8 @@ export function useChatRoomController() {
     handleConditionSubmit,
     handleShareSelected,
     handleDetailClick,
+    handlePrivacyAgree,
+    handlePrivacyClose,
     setShowBottomSheet,
     setShowSelectionView,
     setShowDetailModal,
